@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { selectUname, selectIsLoggedIn, loginAsync, logout, getRe } from './soliSlicer';
+import { selectIsLoggedIn, loginAsync, logout, getRe } from './soliSlicer';
 
 const Soli = () => {
-  const uName = useAppSelector(selectUname);
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
   const dispatch = useAppDispatch();
   const [username, setUsername] = useState('');
@@ -11,6 +10,7 @@ const Soli = () => {
   const key = sessionStorage.getItem("refresh")
   
   
+
 
   return (
     <div>

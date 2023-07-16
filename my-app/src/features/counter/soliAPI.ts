@@ -1,20 +1,14 @@
 import axios from 'axios';
-import { log } from 'console';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
-
+import jwtDecode from 'jwt-decode';
 const MY_SERVER = 'http://127.0.0.1:8000';
 
 // Function to perform a login request
 export const loginServer = async (username: string, password: string) => {
     const response = await axios.post(`${MY_SERVER}/login`, { username, password });    
     localStorage.setItem("access", response.data.access)
-    sessionStorage.setItem("refresh", response.data.refresh)    
-    const jwtUsername = getUsernameFromToken(response.data.access);
-    console.log('Username:', jwtUsername)
-    
+    sessionStorage.setItem("refresh", response.data.refresh)        
     return response.data;
 };
-
 
 
 export const getRefresh = async (refreshToken: any) => {  
@@ -22,17 +16,24 @@ export const getRefresh = async (refreshToken: any) => {
     return response.data;
 };
 
+export const logoutServer = async () => {
+    try {
+        await axios.post(`${MY_SERVER}/logout`);
+        localStorage.removeItem('access');
+        sessionStorage.removeItem('refresh');
+    } catch (error) {
+        console.error('Error logging out:', error);
+    }
+};
 
-interface MyTokenPayload {
-    username: string;
-    // Add other properties from your token payload if needed
-  }
 
 
-const getUsernameFromToken = (token: string): string | null => {
+
+export const getUsernameFromToken = (token: string): string | null => {
   try {
     const decodedToken = jwtDecode<MyTokenPayload>(token);
     const username = decodedToken.username;
+    console.log(username,"sssssdsdsdsd");
     return username;
   } catch (error) {
     console.error('Error decoding token:', error);
@@ -40,12 +41,7 @@ const getUsernameFromToken = (token: string): string | null => {
   }
 };
 
-
-
-// const token = localStorage.getItem('access') || ''; // Replace with your actual token
-// const username = getUsernameFromToken(token);
-// console.log('Username:', username);
-  
-
-
-  
+interface MyTokenPayload {
+    username: string;
+    // Add other properties from your token payload if needed
+  }

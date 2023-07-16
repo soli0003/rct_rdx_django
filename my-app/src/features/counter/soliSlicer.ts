@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { getRefresh, loginServer } from './soliAPI';
+import { getRefresh, getUsernameFromToken, loginServer } from './soliAPI';
 
 export interface SoliState {
-    uName: string;
+    uName: string | null;
     isLoggedIn: boolean;
     status: 'logged' | 'not logged'
 }
@@ -20,6 +20,8 @@ export const loginAsync = createAsyncThunk(
     async (cred: any) => {
         const response = await loginServer(cred.username, cred.password)
         const token = localStorage.getItem("access")
+        console.log(token);
+        
         return response.data
     }
 )
@@ -29,8 +31,17 @@ export const getRe = createAsyncThunk(
     async (refToken: any) => {
         // const token = sessionStorage.getItem("refresh")
         const response = await getRefresh(refToken)
+        // const response = await getRefresh(token)
+        console.log(response);
+    }
+)
 
 
+export const getUname = createAsyncThunk(
+    'login/soliAPI',
+    async (refToken: any) => {
+        const token = localStorage.getItem("access")
+        const response = await getRefresh(token)
         // const response = await getRefresh(token)
         console.log(response);
     }
@@ -48,9 +59,11 @@ export const soliSlice = createSlice({
             state.status = 'logged'
             console.log("ss");
             state.isLoggedIn = true;
+            state.uName = getUsernameFromToken(localStorage.getItem('access') || '');
 
-            
         }
+
+
     },
     extraReducers: (builder) => {
         builder
@@ -59,6 +72,9 @@ export const soliSlice = createSlice({
                     state.isLoggedIn = true;
                     state.status = 'logged'
                     console.log("good");
+                    console.log(state.uName,"1q1q1q");
+                    
+
 
                 } else {
                     state.isLoggedIn = false;
@@ -67,6 +83,7 @@ export const soliSlice = createSlice({
                     state.uName = '';
                 }
             })
+
     }
 });
 

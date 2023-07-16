@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import './App.css';
 import { useAppDispatch } from './app/hooks';
 import Soli from './features/counter/Soli';
-import { selectIsLoggedIn, setLog } from './features/counter/soliSlicer';
+import { setLog } from './features/counter/soliSlicer';
+import Footer from './features/counter/Footer';
 function App() {
 // isLoggedIn = useAppSelector(selectIsLoggedIn);
 
@@ -26,6 +27,7 @@ useEffect(() => {
        hello
        <Soli/>
       </header>
+      <Footer></Footer>
     </div>
   );
 }
